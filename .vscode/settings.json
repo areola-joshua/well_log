@@ -1,0 +1,12 @@
+{
+    "python.REPL.enableREPLSmartSend": false,
+    "terminal.integrated.allowedLinkSchemes": [
+        "file",
+        "http",
+        "https",
+        "mailto",
+        "vscode",
+        "vscode-insiders",
+        "git"
+    ]
+}

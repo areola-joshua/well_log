@@ -23,6 +23,14 @@ def determine_facies(df, gamma_ray_col, baseline=75):
         df['Facies'] = df[gamma_ray_col].apply(lambda x: 'Sand' if x < baseline else 'Shale')
     return df
 
+st.title('Well Log Dashboard')
+
+st.write("""
+## `About`
+:clap: This dashboard provides interactive visualizations of `well log data`, 
+         including `facies plots`, `water saturation`, `porosity`, and `permeability`. Upload new data or use the example dataset provided.
+""")
+
 # Load example dataset
 example_file = 'x1.las'
 df = load_las(example_file)
@@ -41,11 +49,11 @@ if st.sidebar.button("Use Example Dataset"):
 st.sidebar.write("### Select Columns")
 columns = df.columns.tolist()
 gamma_ray_col = st.sidebar.selectbox("Select Gamma-Ray Column", columns)
-cali_col = st.sidebar.selectbox("Select CALI Column", columns)
+cali_col = st.sidebar.selectbox("Select Caliper Column", columns)
 resistivity_col = st.sidebar.selectbox("Select Resistivity Column", columns)
 density_col = st.sidebar.selectbox("Select Density Column", columns)
 acoustic_col = st.sidebar.selectbox("Select Acoustic Column", columns)
-nphi_col = st.sidebar.selectbox("Select NPHI Column", columns)
+nphi_col = st.sidebar.selectbox("Select Neutron Column", columns)
 
 # Add baseline for facies determination
 baseline = st.sidebar.number_input("Set Gamma-Ray Baseline for Facies", value=75)

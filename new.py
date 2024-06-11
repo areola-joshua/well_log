@@ -90,7 +90,7 @@ def plot_combination_log(df, gamma_ray_col, resistivity_col, density_col, nphi_c
     axes[0].legend()
 
     # Resistivity on a logarithmic scale
-    axes[1].semilogx(df[resistivity_col], df.index, color='green')
+    axes[1].semilogx(df[resistivity_col], df.index, color='red')
     axes[1].set_xlabel('Resistivity', fontsize=12, color='black')
 
     # Overlaid RHOB and NPHI
@@ -125,7 +125,7 @@ def plot_combination_log(df, gamma_ray_col, resistivity_col, density_col, nphi_c
 
 # Individual log plots
 individual_logs_columns = [nphi_col, density_col, gamma_ray_col, resistivity_col, cali_col, acoustic_col]
-st.write("### Individual Well Log Plots")
+st.write("### `Individual Well Log Plots`")
 fig_individual_logs = plot_individual_logs(df, individual_logs_columns)
 st.pyplot(fig_individual_logs)
 

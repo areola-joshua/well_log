@@ -23,13 +23,15 @@ def determine_facies(df, gamma_ray_col, baseline=75):
         df['Facies'] = df[gamma_ray_col].apply(lambda x: 'Sand' if x < baseline else 'Shale')
     return df
 
-st.title('Well Log Dashboard')
+st.title('`Well Log Dashboard`')
 
 st.write("""
 ## `About`
 :clap: This dashboard provides interactive visualizations of `well log data`, 
-         including `facies plots`, `water saturation`, `porosity`, and `permeability`. Upload new data or use the example dataset provided.
+         including `facies plots`, `water saturation`, `porosity`, `facie`, and `permeability`. Upload new data or use the example dataset provided.
 """)
+
+st.markdown('---')
 
 # Load example dataset
 example_file = 'x1.las'
@@ -63,7 +65,7 @@ df = determine_facies(df, gamma_ray_col, baseline)
 
 # Function to plot individual logs
 def plot_individual_logs(df, columns, depth_col='DEPT'):
-    fig, axes = plt.subplots(nrows=1, ncols=len(columns), figsize=(24, 20), sharey=True)
+    fig, axes = plt.subplots(nrows=1, ncols=len(columns), figsize=(24, 16), sharey=True)
     
     for ax, col in zip(axes, columns):
         ax.plot(df[col], df.index)
@@ -78,7 +80,7 @@ def plot_individual_logs(df, columns, depth_col='DEPT'):
 
 # Function to plot combination log
 def plot_combination_log(df, gamma_ray_col, resistivity_col, density_col, nphi_col, baseline, depth_col='DEPT'):
-    fig, axes = plt.subplots(nrows=1, ncols=4, figsize=(24, 20), sharey=True)
+    fig, axes = plt.subplots(nrows=1, ncols=4, figsize=(24, 16), sharey=True)
     
     # GR with facies color coding
     axes[0].plot(df[gamma_ray_col], df.index, color='black')

@@ -3,4 +3,4 @@ seaborn
 pandas
 matplotlib
 streamlit
-lasio
+lasio == 0.31

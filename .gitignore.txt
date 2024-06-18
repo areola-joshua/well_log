@@ -1,7 +1,6 @@
-Untitled.ipynb
-Proposal.docx
-well_log-
-.ipynb_checkpoints
-.vscode
-.gitignore
-Write Up.docx
+*.Untitled.ipynb
+*.Proposal.docx
+.well_log-/
+.ipynb_checkpoints/
+.vscode/
+*.Write Up.docx

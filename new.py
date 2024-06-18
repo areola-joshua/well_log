@@ -183,6 +183,12 @@ Our Streamlit web app offers a powerful and intuitive platform for analyzing wel
     st.pyplot(fig_individual_logs)
     st.markdown("---")
 
+    # Display violin plot for facies
+    st.write("### Lithology Analysis")
+    fig_violin_facies = plot_violin_facies(df)
+    st.pyplot(fig_violin_facies)
+    st.markdown("---")
+
     # Perform and display petrophysical analysis
     df = perform_petrophysics(df)
     st.write("### Comprehensive Well Log and Petrophysical Analysis Plot")
@@ -190,11 +196,7 @@ Our Streamlit web app offers a powerful and intuitive platform for analyzing wel
     st.pyplot(fig_comprehensive)
     st.markdown("---")
 
-    # Display violin plot for facies
-    st.write("### Lithology Analysis")
-    fig_violin_facies = plot_violin_facies(df)
-    st.pyplot(fig_violin_facies)
-    st.markdown("---")
+    
 
 if __name__ == "__main__":
     main()

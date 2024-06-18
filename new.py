@@ -163,6 +163,8 @@ def main():
         plt.title('Lithology Analysis')
         plt.tight_layout()
         return fig
+    
+    st.balloons()
 
     st.write("### About")
     st.write("""

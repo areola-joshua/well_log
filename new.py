@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import ListedColormap
 import seaborn as sns
+from tabulate import tabulate
 import warnings
 
 # Disable deprecation warnings
@@ -144,7 +145,7 @@ def main():
 
         # Porosity
         axes[6].plot(df['Porosity'], df[depth_col], color='brown', linewidth=1)
-        axes[6].fill_betweenx(df[depth_col], 0, df['Porosity'], color='red', alpha=0.3)
+        axes[6].fill_betweenx(df[depth_col], 0, df['Porosity'], color='brown', alpha=0.3)
         axes[6].set_xlabel('Porosity', fontsize=12, color='black')
 
         # Facies plot
@@ -175,9 +176,24 @@ def main():
     # Function to plot violin plot for facies
     def plot_violin_facies(df):
         fig, ax = plt.subplots(figsize=(10, 6))
-        sns.violinplot(x='Facies', y=facie, data=df, palette=['yellow', 'green'], ax=ax)
+        sns.violinplot(x='Facies', y=gamma_ray_col, data=df, palette=['yellow', 'green'], ax=ax)
         ax.set_title('Lithology Analysis')
         return fig
+
+    # Function to generate and display the summary table
+    def display_summary_table(df):
+        summary_data = {
+            'Gamma-Ray': [df[gamma_ray_col].mean()],
+            'Volume of Shale (Vsh)': [df['Vsh'].mean()],
+            'Water Saturation (Sw)': [df['Sw'].mean()],
+            'Permeability (Perm)': [df['Perm'].mean()],
+            'Porosity': [df['Porosity'].mean()],
+            'Resistivity': [df[resistivity_col].mean()]
+        }
+        summary_df = pd.DataFrame(summary_data)
+        summary_table = tabulate(summary_df, headers='keys', tablefmt='grid')
+        st.write("### Average Across the Reservoir")
+        st.text(summary_table)
 
     st.write("### About")
     st.write("""
@@ -194,6 +210,7 @@ Our Streamlit web app offers a powerful and intuitive platform for analyzing wel
     st.write("### Individual Well Log Plots")
     fig_individual_logs = plot_individual_logs(df, [nphi_col, density_col, gamma_ray_col, resistivity_col, cali_col, acoustic_col])
     st.pyplot(fig_individual_logs)
+    fig_individual_logs.savefig("individual_logs.png")
     st.markdown("---")
 
     # Perform and display petrophysical analysis
@@ -201,13 +218,22 @@ Our Streamlit web app offers a powerful and intuitive platform for analyzing wel
     st.write("### Comprehensive Well Log and Petrophysical Analysis Plot")
     fig_comprehensive = plot_comprehensive(df)
     st.pyplot(fig_comprehensive)
+    fig_comprehensive.savefig("comprehensive_plot.png")
     st.markdown("---")
 
     # Display violin plot for facies
     st.write("### Lithology Analysis")
     fig_violin_facies = plot_violin_facies(df)
     st.pyplot(fig_violin_facies)
+    fig_violin_facies.savefig("violin_plot.png")
     st.markdown("---")
+
+    # Display summary table
+    display_summary_table(df)
+
+    # Save the DataFrame
+    df.to_csv("well_log_data.csv", index=False)
+    st.write("Data and plots saved successfully.")
 
 if __name__ == "__main__":
     main()

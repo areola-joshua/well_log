@@ -144,7 +144,7 @@ def main():
 
         # Porosity
         axes[6].plot(df['Porosity'], df[depth_col], color='brown', linewidth=1)
-        axes[6].fill_betweenx(df[depth_col], 0, df['Porosity'], color='brown', alpha=0.3)
+        axes[6].fill_betweenx(df[depth_col], 0, df['Porosity'], color='red', alpha=0.3)
         axes[6].set_xlabel('Porosity', fontsize=12, color='black')
 
         # Facies plot
@@ -175,7 +175,7 @@ def main():
     # Function to plot violin plot for facies
     def plot_violin_facies(df):
         fig, ax = plt.subplots(figsize=(10, 6))
-        sns.violinplot(x='Facies', y=density_col, data=df, palette=['yellow', 'green'], ax=ax)
+        sns.violinplot(x='Facies', y=facie, data=df, palette=['yellow', 'green'], ax=ax)
         ax.set_title('Lithology Analysis')
         return fig
 

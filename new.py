@@ -176,24 +176,33 @@ def main():
     # Function to plot violin plot for facies
     def plot_violin_facies(df):
         fig, ax = plt.subplots(figsize=(10, 6))
-        sns.violinplot(x='Facies', y=gamma_ray_col, data=df, palette=['yellow', 'green'], ax=ax)
+        sns.violinplot(x='Facies', y=RHOB, data=df, palette=['yellow', 'green'], ax=ax)
         ax.set_title('Lithology Analysis')
         return fig
 
-    # Function to generate and display the summary table
+    # Function to display summary table and save plots and data
     def display_summary_table(df):
-        summary_data = {
-            'Gamma-Ray': [df[gamma_ray_col].mean()],
-            'Volume of Shale (Vsh)': [df['Vsh'].mean()],
-            'Water Saturation (Sw)': [df['Sw'].mean()],
-            'Permeability (Perm)': [df['Perm'].mean()],
-            'Porosity': [df['Porosity'].mean()],
-            'Resistivity': [df[resistivity_col].mean()]
-        }
-        summary_df = pd.DataFrame(summary_data)
-        summary_table = tabulate(summary_df, headers='keys', tablefmt='grid')
+        # Create the summary table
+        summary = df[['GR', 'Vsh', 'Sw', 'Perm', 'Porosity']].mean().reset_index()
+        summary.columns = ['Parameter', 'Average Value']
+        summary_table = tabulate(summary, headers='keys', tablefmt='pretty')
+    
+     # Display the summary table in Streamlit
         st.write("### Average Across the Reservoir")
         st.text(summary_table)
+
+    # Save the summary table as a text file
+        with open('summary_table.txt', 'w') as f:
+            f.write(summary_table)
+
+    # Save the DataFrame
+        df.to_csv("well_log_data.csv", index=False)
+
+    # Save the plots
+        fig_combination_log.savefig('combination_log_plot.png')
+        fig_comprehensive.savefig('comprehensive_plot.png')
+
+        st.write("Data and plots saved successfully.")
 
     st.write("### About")
     st.write("""
@@ -208,9 +217,9 @@ Our Streamlit web app offers a powerful and intuitive platform for analyzing wel
 
     # Display individual log plots
     st.write("### Individual Well Log Plots")
-    fig_individual_logs = plot_individual_logs(df, [nphi_col, density_col, gamma_ray_col, resistivity_col, cali_col, acoustic_col])
-    st.pyplot(fig_individual_logs)
-    fig_individual_logs.savefig("individual_logs.png")
+    fig_combination_log = plot_individual_logs(df, [nphi_col, density_col, gamma_ray_col, resistivity_col, cali_col, acoustic_col])
+    st.pyplot(fig_combination_log)
+    fig_combination_log.savefig("individual_logs.png")
     st.markdown("---")
 
     # Perform and display petrophysical analysis
@@ -231,9 +240,9 @@ Our Streamlit web app offers a powerful and intuitive platform for analyzing wel
     # Display summary table
     display_summary_table(df)
 
-    # Save the DataFrame
-    df.to_csv("well_log_data.csv", index=False)
-    st.write("Data and plots saved successfully.")
+    # Button to trigger the function
+    if st.button("Generate Summary Table and Save Plots"):
+        display_summary_table(df)
 
 if __name__ == "__main__":
     main()

@@ -25,6 +25,11 @@ def determine_facies(df, gamma_ray_col, baseline=75):
         df['Facies'] = df[gamma_ray_col].apply(lambda x: 'Sand' if x < baseline else 'Shale')
     return df
 
+# Function to calculate porosity
+def calculate_porosity(df, density_col, rho_qtz=2.65, rho_fl=1.05):
+    df['Porosity'] = (rho_qtz - df[density_col]) / (rho_qtz - rho_fl)
+    return df
+
 # Main Streamlit app
 def main():
     st.write("""
@@ -59,6 +64,9 @@ def main():
 
     # Update DataFrame with facies based on selected gamma-ray column
     df = determine_facies(df, gamma_ray_col, baseline)
+
+    # Calculate porosity
+    df = calculate_porosity(df, density_col)
 
     # Function to plot individual logs
     def plot_individual_logs(df, columns, depth_col='DEPT'):
@@ -106,28 +114,38 @@ def main():
         axes[1].semilogx(df[resistivity_col], df[depth_col], color='red')
         axes[1].set_xlabel('Resistivity', fontsize=12, color='black')
 
-        # Overlaid RHOB and NPHI with twin axes
+        # Overlaid RHOB and NPHI with red color between them
         ax2 = axes[2].twiny()
         axes[2].plot(df[nphi_col], df[depth_col], color='blue', label='NPHI')
         ax2.plot(df[density_col], df[depth_col], color='red', label='RHOB')
+        axes[2].fill_betweenx(df[depth_col], df[nphi_col], df[density_col], where=(df[nphi_col] < df[density_col]), color='red', alpha=0.3)
         axes[2].set_xlabel('NPHI', fontsize=12, color='black')
         ax2.set_xlabel('RHOB', fontsize=12, color='black')
         axes[2].legend(loc='upper left')
         ax2.legend(loc='upper right')
 
         # Water Saturation (Sw)
-        axes[3].plot(df['Sw'], df[depth_col], color='blue')
+        axes[3].plot(df['Sw'], df[depth_col], color='blue', linewidth=1)
+        axes[3].fill_betweenx(df[depth_col], 0, df['Sw'], color='blue', alpha=0.3)
         axes[3].set_xlabel('Water Saturation (Sw)', fontsize=12, color='black')
 
         # Permeability (Perm and Eff_Perm)
-        axes[4].plot(df['Perm'], df[depth_col], color='green', label='Perm', alpha=0.6)
-        axes[4].plot(df['Eff_Perm'], df[depth_col], color='red', label='Eff_Perm', alpha=0.6)
+        axes[4].plot(df['Perm'], df[depth_col], color='green', linewidth=1, label='Perm', alpha=0.6)
+        axes[4].fill_betweenx(df[depth_col], 0, df['Perm'], color='green', alpha=0.3)
+        axes[4].plot(df['Eff_Perm'], df[depth_col], color='red', linewidth=1, label='Eff_Perm', alpha=0.6)
+        axes[4].fill_betweenx(df[depth_col], 0, df['Eff_Perm'], color='red', alpha=0.3)
         axes[4].set_xlabel('Permeability', fontsize=12, color='black')
         axes[4].legend()
 
         # Volume of Shale (Vsh)
-        axes[5].plot(df['Vsh'], df[depth_col], color='purple', alpha=0.6)
+        axes[5].plot(df['Vsh'], df[depth_col], color='purple', linewidth=1, alpha=0.6)
+        axes[5].fill_betweenx(df[depth_col], 0, df['Vsh'], color='purple', alpha=0.3)
         axes[5].set_xlabel('Volume of Shale (Vsh)', fontsize=12, color='black')
+
+        # Porosity
+        axes[6].plot(df['Porosity'], df[depth_col], color='brown', linewidth=1)
+        axes[6].fill_betweenx(df[depth_col], 0, df['Porosity'], color='brown', alpha=0.3)
+        axes[6].set_xlabel('Porosity', fontsize=12, color='black')
 
         # Facies plot
         facies_colors = {'Sand': 'yellow', 'Shale': 'green'}
@@ -137,10 +155,10 @@ def main():
         norm = plt.Normalize(0, 2)
         facies_values = df['Facies'].apply(lambda x: 1 if x == 'Sand' else 2)
 
-        axes[6].barh(df[depth_col], np.ones(len(df)), color=facies_colormap, edgecolor='none')
-        axes[6].set_xlabel('Facies', fontsize=12, color='black')
-        axes[6].invert_yaxis()
-        axes[6].set_xticks([])
+        axes[7].barh(df[depth_col], np.ones(len(df)), color=facies_colormap, edgecolor='none')
+        axes[7].set_xlabel('Facies', fontsize=12, color='black')
+        axes[7].invert_yaxis()
+        axes[7].set_xticks([])
 
         # Add color bar beside facies plot
         cbar_ax = fig.add_axes([0.92, 0.15, 0.02, 0.7])  # [left, bottom, width, height]
@@ -154,17 +172,12 @@ def main():
         plt.tight_layout(rect=[0, 0, 0.9, 1])  # Adjust the main plot area to make space for the color bar
         return fig
 
+    # Function to plot violin plot for facies
     def plot_violin_facies(df):
-        fig, ax = plt.subplots(figsize=(12, 8))
-        sns.violinplot(x='Facies', y='DEPT', data=df, palette={"Sand": "yellow", "Shale": "green"}, ax=ax)
-        ax.set_xlabel('Facies', fontsize=12, color='black')
-        ax.set_ylabel('Depth', fontsize=12, color='black')
-        ax.invert_yaxis()
-        plt.title('Lithology Analysis')
-        plt.tight_layout()
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.violinplot(x='Facies', y=density_col, data=df, palette=['yellow', 'green'], ax=ax)
+        ax.set_title('Lithology Analysis')
         return fig
-    
-    st.balloons()
 
     st.write("### About")
     st.write("""
@@ -183,12 +196,6 @@ Our Streamlit web app offers a powerful and intuitive platform for analyzing wel
     st.pyplot(fig_individual_logs)
     st.markdown("---")
 
-    # Display violin plot for facies
-    st.write("### Lithology Analysis")
-    fig_violin_facies = plot_violin_facies(df)
-    st.pyplot(fig_violin_facies)
-    st.markdown("---")
-
     # Perform and display petrophysical analysis
     df = perform_petrophysics(df)
     st.write("### Comprehensive Well Log and Petrophysical Analysis Plot")
@@ -196,7 +203,11 @@ Our Streamlit web app offers a powerful and intuitive platform for analyzing wel
     st.pyplot(fig_comprehensive)
     st.markdown("---")
 
-    
+    # Display violin plot for facies
+    st.write("### Lithology Analysis")
+    fig_violin_facies = plot_violin_facies(df)
+    st.pyplot(fig_violin_facies)
+    st.markdown("---")
 
 if __name__ == "__main__":
     main()

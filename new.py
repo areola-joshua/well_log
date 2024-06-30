@@ -112,7 +112,7 @@ def plot_comprehensive(df, depth_col='DEPT', gamma_ray_col='GR', resistivity_col
 
     # Porosity
     axes[6].plot(df['Porosity'], df[depth_col], color='brown', linewidth=1)
-    axes[6].fill_betweenx(df[depth_col], 0, df['Porosity'], color='brown', alpha=0.3)
+    axes[6].fill_betweenx(df[depth_col], 0, df['Porosity'], color='blue', alpha=0.3)
     axes[6].set_xlabel('Porosity', fontsize=12, color='black')
 
     # Facies plot
@@ -148,7 +148,6 @@ def plot_violin_facies(df, gamma_ray_col):
     return fig
 
 # Function to generate and display the summary table
-# Function to generate and display the summary table
 def display_summary_table(df, gamma_ray_col, resistivity_col):
     summary_data = {
         'Parameter': ['Gamma-Ray', 'Volume of Shale (Vsh)', 'Water Saturation (Sw)', 'Permeability (Perm)', 'Porosity'],
@@ -162,16 +161,21 @@ def display_summary_table(df, gamma_ray_col, resistivity_col):
     }
     summary_df = pd.DataFrame(summary_data)
     summary_table = tabulate(summary_df, headers='keys', tablefmt='grid')
-    st.write("### Average Across the Reservoir")
+    st.write("### `Average Across the Reservoir`")
     st.text(summary_table)
 
 
 # Main Streamlit app
 def main():
     st.image("download.jpg", use_column_width=True)
-    st.markdown("---")
+    st.markdown("---")    
     st.write("""
-    # Well Log Analysis Dashboard
+    # `Well Log Analysis Dashboard`
+    """)
+    st.write("### `About`")
+    st.write("""
+              :clap: This Streamlit web app offers a powerful and intuitive platform for analyzing well log data:stuck_out_tongue_closed_eyes:. Designed for geologists, 
+              petroleum engineers, and data scientists:blush:. This app simplifies the process of visualizing, interpreting, and managing well log data:wave:
     """)
 
     # Load example dataset
@@ -184,7 +188,7 @@ def main():
     if uploaded_file is not None:
         df = load_las(uploaded_file)
 
-    if st.sidebar.button("Use Example Dataset"):
+    if st.sidebar.button("`Use Example Dataset`"):
         df = load_las(example_file)
 
     # Dynamic column selection for well logs
@@ -198,7 +202,7 @@ def main():
     nphi_col = st.sidebar.selectbox("Select `Neutron` Column", columns, index=columns.index('NPHI'))
 
     # Add baseline for facies determination
-    baseline = st.sidebar.number_input("Set `Gamma-Ray Baseline` for `Facies` ", value=75)
+    baseline = st.sidebar.number_input("`Set Gamma-Ray Baseline` for Facies` ", value=75)
 
     # Update DataFrame with facies based on selected gamma-ray column
     df = determine_facies(df, gamma_ray_col, baseline)
@@ -210,24 +214,24 @@ def main():
     df = perform_petrophysics(df, gamma_ray_col, resistivity_col, density_col)
 
     # Display the first few rows of the DataFrame to verify the facies column
-    st.write("### `Dataset Head` ")
+    st.write("### `Dataset Head`:stuck_out_tongue_closed_eyes: ")
     st.write(df.head())
     st.markdown("---")
 
     # Display individual log plots
-    st.write("### `Individual Well Log Plots` ")
+    st.write("### `Individual Well Log Plots`:open_mouth: ")
     fig_individual_logs = plot_individual_logs(df, [nphi_col, density_col, gamma_ray_col, resistivity_col, cali_col, acoustic_col])
     st.pyplot(fig_individual_logs)
     st.markdown("---")
 
     # Display comprehensive well log and petrophysical analysis plot
-    st.write("### `Comprehensive Well Log and Petrophysical Analysis Plot` ")
+    st.write("### `Comprehensive Well Log and Petrophysical Analysis Plot`:blush: ")
     fig_comprehensive = plot_comprehensive(df)
     st.pyplot(fig_comprehensive)
     st.markdown("---")
 
     # Display violin plot for facies
-    st.write("### `Lithology Analysis` ")
+    st.write("### `Lithology Analysis`:stuck_out_tongue_closed_eyes: ")
     fig_violin_facies = plot_violin_facies(df, gamma_ray_col)
     st.pyplot(fig_violin_facies)
     st.markdown("---")
@@ -236,12 +240,12 @@ def main():
     display_summary_table(df, gamma_ray_col, resistivity_col)
     st.markdown('---')
     
-    st.write(" `New Data Summary Column` ")
+    st.write(" `New Data Summary Column`:wave: ")
     st.write(df.head())
     st.markdown('---')
 
     # Save button to save the figures and data
-    if st.button(" `Generate Summary Table and Save Plots `"):
+    if st.button(" `Generate Summary Table and Save Plots`:open_mouth:"):
         # Save plots as images
         fig_individual_logs.savefig("individual_logs.png")
         fig_comprehensive.savefig("comprehensive_plot.png")

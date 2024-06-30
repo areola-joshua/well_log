@@ -143,7 +143,7 @@ def plot_comprehensive(df, depth_col='DEPT', gamma_ray_col='GR', resistivity_col
 # Function to plot violin plot for facies
 def plot_violin_facies(df, gamma_ray_col):
     fig, ax = plt.subplots(figsize=(10, 6))
-    sns.violinplot(x='Facies', y='Porosity', data=df, palette=['yellow', 'green'], ax=ax)
+    sns.violinplot(x='Facies', y='NPHI', data=df, palette=['yellow', 'green'], ax=ax)
     ax.set_title('Lithology Analysis')
     return fig
 
@@ -161,7 +161,7 @@ def display_summary_table(df, gamma_ray_col, resistivity_col):
     }
     summary_df = pd.DataFrame(summary_data)
     summary_table = tabulate(summary_df, headers='keys', tablefmt='grid')
-    st.write("### `Average Across the Reservoir`")
+    st.write("### `Average Values across the Reservoir`")
     st.text(summary_table)
 
 

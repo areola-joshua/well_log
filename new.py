@@ -8,6 +8,13 @@ import seaborn as sns
 from tabulate import tabulate
 import warnings
 
+
+hide_menu_style = """
+        <style>
+        #MainMenu {visibility: hidden; }
+        footer {visibility: hidden;}
+        </style>
+        """
 # Disable deprecation warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -144,14 +151,13 @@ def plot_violin_facies(df, gamma_ray_col):
 # Function to generate and display the summary table
 def display_summary_table(df, gamma_ray_col, resistivity_col):
     summary_data = {
-        'Parameter': ['Gamma-Ray', 'Volume of Shale (Vsh)', 'Water Saturation (Sw)', 'Permeability (Perm)', 'Porosity', 'Resistivity'],
+        'Parameter': ['Gamma-Ray', 'Volume of Shale (Vsh)', 'Water Saturation (Sw)', 'Permeability (Perm)', 'Porosity'],
         'Value': [
             f"{df[gamma_ray_col].mean():.4f}",
             f"{df['Vsh'].mean():.4f}",
             f"{df['Sw'].mean():.4f}",
             f"{df['Perm'].mean():.4f}",
-            f"{df['Porosity'].mean():.4f}",
-            f"{df[resistivity_col].mean():.4f}"
+            f"{df['Porosity'].mean():.4f}"
         ]
     }
     summary_df = pd.DataFrame(summary_data)
@@ -162,6 +168,8 @@ def display_summary_table(df, gamma_ray_col, resistivity_col):
 
 # Main Streamlit app
 def main():
+    st.image("download.jpg", use_column_width=True)
+    st.markdown("---")
     st.write("""
     # Well Log Analysis Dashboard
     """)
@@ -171,7 +179,7 @@ def main():
     df = load_las(example_file)
 
     # Sidebar for file upload and example data
-    st.sidebar.title("Options :clap:")
+    st.sidebar.title("Sidebar Options :clap:")
     uploaded_file = st.sidebar.file_uploader("Upload a new LAS file", type=["las"])
     if uploaded_file is not None:
         df = load_las(uploaded_file)
@@ -226,9 +234,11 @@ def main():
 
     # Display summary table
     display_summary_table(df, gamma_ray_col, resistivity_col)
+    st.markdown('---')
     
-    st.write('new data column')
+    st.write('New Data Summary Column')
     st.write(df.head())
+    st.markdown('---')
 
     # Save button to save the figures and data
     if st.button("Generate Summary Table and Save Plots"):
@@ -242,5 +252,7 @@ def main():
         df.to_csv("well_log_data.csv", index=False)
         st.write("Data saved successfully.")
 
+
+    st.write("`Built with ❤️ by Elijah & Joshua`")
 if __name__ == "__main__":
     main()

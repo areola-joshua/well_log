@@ -167,6 +167,7 @@ def display_summary_table(df, gamma_ray_col, resistivity_col):
 
 # Main Streamlit app
 def main():
+    st.balloons()
     st.image("download.jpg", use_column_width=True)
     st.markdown("---")    
     st.write("""
@@ -219,13 +220,13 @@ def main():
     st.markdown("---")
 
     # Display individual log plots
-    st.write("### `Individual Well Log Plots`:open_mouth: ")
+    st.write("### `Well Log Plots`:open_mouth: ")
     fig_individual_logs = plot_individual_logs(df, [nphi_col, density_col, gamma_ray_col, resistivity_col, cali_col, acoustic_col])
     st.pyplot(fig_individual_logs)
     st.markdown("---")
 
     # Display comprehensive well log and petrophysical analysis plot
-    st.write("### `Comprehensive Well Log and Petrophysical Analysis Plot`:blush: ")
+    st.write("### `Petrophysical Analysis Plot`:blush: ")
     fig_comprehensive = plot_comprehensive(df)
     st.pyplot(fig_comprehensive)
     st.markdown("---")
@@ -245,6 +246,7 @@ def main():
     st.markdown('---')
 
     # Save button to save the figures and data
+    st.write('Click on the button below to save the data plots and data tables :blush:')
     if st.button(" `Generate Summary Table and Save Plots`:open_mouth:"):
         # Save plots as images
         fig_individual_logs.savefig("individual_logs.png")
@@ -254,8 +256,8 @@ def main():
 
         # Save DataFrame as CSV
         df.to_csv("well_log_data.csv", index=False)
-        st.write(" `Data saved successfully`.")
-
+        st.success(" `Data saved successfully`.")
+        st.balloons()
 
     st.write("`Built with ❤️ by Elijah & Joshua`")
 if __name__ == "__main__":

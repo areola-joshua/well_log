@@ -180,7 +180,7 @@ def main():
 
     # Sidebar for file upload and example data
     st.sidebar.title("Sidebar Options :clap:")
-    uploaded_file = st.sidebar.file_uploader("Upload a new LAS file", type=["las"])
+    uploaded_file = st.sidebar.file_uploader(":smile: Upload a new LAS file", type=["las"])
     if uploaded_file is not None:
         df = load_las(uploaded_file)
 
@@ -190,15 +190,15 @@ def main():
     # Dynamic column selection for well logs
     st.sidebar.write("### Select Columns")
     columns = df.columns.tolist()
-    gamma_ray_col = st.sidebar.selectbox("Select Gamma-Ray Column", columns, index=columns.index('GR'))
-    cali_col = st.sidebar.selectbox("Select Caliper Column", columns, index=columns.index('CALI'))
-    resistivity_col = st.sidebar.selectbox("Select Resistivity Column", columns, index=columns.index('ILD'))
-    density_col = st.sidebar.selectbox("Select Density Column", columns, index=columns.index('RHOB'))
-    acoustic_col = st.sidebar.selectbox("Select Acoustic Column", columns, index=columns.index('DT'))
-    nphi_col = st.sidebar.selectbox("Select Neutron Column", columns, index=columns.index('NPHI'))
+    gamma_ray_col = st.sidebar.selectbox("Select `Gamma-Ray` Column", columns, index=columns.index('GR'))
+    cali_col = st.sidebar.selectbox("Select `Caliper` Column", columns, index=columns.index('CALI'))
+    resistivity_col = st.sidebar.selectbox("Select `Resistivity` Column", columns, index=columns.index('ILD'))
+    density_col = st.sidebar.selectbox("Select `Density` Column", columns, index=columns.index('RHOB'))
+    acoustic_col = st.sidebar.selectbox("Select `Acoustic` Column", columns, index=columns.index('DT'))
+    nphi_col = st.sidebar.selectbox("Select `Neutron` Column", columns, index=columns.index('NPHI'))
 
     # Add baseline for facies determination
-    baseline = st.sidebar.number_input("Set Gamma-Ray Baseline for Facies", value=75)
+    baseline = st.sidebar.number_input("Set `Gamma-Ray Baseline` for `Facies` ", value=75)
 
     # Update DataFrame with facies based on selected gamma-ray column
     df = determine_facies(df, gamma_ray_col, baseline)
@@ -210,24 +210,24 @@ def main():
     df = perform_petrophysics(df, gamma_ray_col, resistivity_col, density_col)
 
     # Display the first few rows of the DataFrame to verify the facies column
-    st.write("### Dataset Head")
+    st.write("### `Dataset Head` ")
     st.write(df.head())
     st.markdown("---")
 
     # Display individual log plots
-    st.write("### Individual Well Log Plots")
+    st.write("### `Individual Well Log Plots` ")
     fig_individual_logs = plot_individual_logs(df, [nphi_col, density_col, gamma_ray_col, resistivity_col, cali_col, acoustic_col])
     st.pyplot(fig_individual_logs)
     st.markdown("---")
 
     # Display comprehensive well log and petrophysical analysis plot
-    st.write("### Comprehensive Well Log and Petrophysical Analysis Plot")
+    st.write("### `Comprehensive Well Log and Petrophysical Analysis Plot` ")
     fig_comprehensive = plot_comprehensive(df)
     st.pyplot(fig_comprehensive)
     st.markdown("---")
 
     # Display violin plot for facies
-    st.write("### Lithology Analysis")
+    st.write("### `Lithology Analysis` ")
     fig_violin_facies = plot_violin_facies(df, gamma_ray_col)
     st.pyplot(fig_violin_facies)
     st.markdown("---")
@@ -236,12 +236,12 @@ def main():
     display_summary_table(df, gamma_ray_col, resistivity_col)
     st.markdown('---')
     
-    st.write('New Data Summary Column')
+    st.write(" `New Data Summary Column` ")
     st.write(df.head())
     st.markdown('---')
 
     # Save button to save the figures and data
-    if st.button("Generate Summary Table and Save Plots"):
+    if st.button(" `Generate Summary Table and Save Plots `"):
         # Save plots as images
         fig_individual_logs.savefig("individual_logs.png")
         fig_comprehensive.savefig("comprehensive_plot.png")
@@ -250,7 +250,7 @@ def main():
 
         # Save DataFrame as CSV
         df.to_csv("well_log_data.csv", index=False)
-        st.write("Data saved successfully.")
+        st.write(" `Data saved successfully`.")
 
 
     st.write("`Built with ❤️ by Elijah & Joshua`")

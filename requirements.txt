@@ -4,3 +4,4 @@ pandas==2.2.2
 matplotlib<=3.7.2
 streamlit<=1.32.0
 lasio<=0.31
+tabulate==0.8.10

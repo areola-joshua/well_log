@@ -176,7 +176,7 @@ def main():
     # Function to plot violin plot for facies
     def plot_violin_facies(df):
         fig, ax = plt.subplots(figsize=(10, 6))
-        sns.violinplot(x='Facies', y=RHOB, data=df, palette=['yellow', 'green'], ax=ax)
+        sns.violinplot(x='Facies', y=density_col, data=df, palette=['yellow', 'green'], ax=ax)
         ax.set_title('Lithology Analysis')
         return fig
 

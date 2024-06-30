@@ -136,24 +136,29 @@ def plot_comprehensive(df, depth_col='DEPT', gamma_ray_col='GR', resistivity_col
 # Function to plot violin plot for facies
 def plot_violin_facies(df, gamma_ray_col):
     fig, ax = plt.subplots(figsize=(10, 6))
-    sns.violinplot(x='Facies', y=gamma_ray_col, data=df, palette=['yellow', 'green'], ax=ax)
+    sns.violinplot(x='Facies', y='Porosity', data=df, palette=['yellow', 'green'], ax=ax)
     ax.set_title('Lithology Analysis')
     return fig
 
 # Function to generate and display the summary table
+# Function to generate and display the summary table
 def display_summary_table(df, gamma_ray_col, resistivity_col):
     summary_data = {
-        'Gamma-Ray': [df[gamma_ray_col].mean()],
-        'Volume of Shale (Vsh)': [df['Vsh'].mean()],
-        'Water Saturation (Sw)': [df['Sw'].mean()],
-        'Permeability (Perm)': [df['Perm'].mean()],
-        'Porosity': [df['Porosity'].mean()],
-        'Resistivity': [df[resistivity_col].mean()]
+        'Parameter': ['Gamma-Ray', 'Volume of Shale (Vsh)', 'Water Saturation (Sw)', 'Permeability (Perm)', 'Porosity', 'Resistivity'],
+        'Value': [
+            f"{df[gamma_ray_col].mean():.4f}",
+            f"{df['Vsh'].mean():.4f}",
+            f"{df['Sw'].mean():.4f}",
+            f"{df['Perm'].mean():.4f}",
+            f"{df['Porosity'].mean():.4f}",
+            f"{df[resistivity_col].mean():.4f}"
+        ]
     }
     summary_df = pd.DataFrame(summary_data)
     summary_table = tabulate(summary_df, headers='keys', tablefmt='grid')
     st.write("### Average Across the Reservoir")
     st.text(summary_table)
+
 
 # Main Streamlit app
 def main():
@@ -221,6 +226,9 @@ def main():
 
     # Display summary table
     display_summary_table(df, gamma_ray_col, resistivity_col)
+    
+    st.write('new data column')
+    st.write(df.head())
 
     # Save button to save the figures and data
     if st.button("Generate Summary Table and Save Plots"):

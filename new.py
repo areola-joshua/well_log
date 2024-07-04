@@ -55,11 +55,14 @@ def perform_petrophysics(df, gamma_ray_col, resistivity_col, density_col):
 # Function to plot individual logs
 def plot_individual_logs(df, columns, depth_col='DEPT'):
     fig, axes = plt.subplots(nrows=1, ncols=len(columns), figsize=(24, 16), sharey=True)
-    for ax, col in zip(axes, columns):
-        ax.plot(df[col], df[depth_col])
+    colors = plt.cm.jet(np.linspace(0, 1, len(columns)))  # Generate colors from colormap
+
+    for ax, col, color in zip(axes, columns, colors):
+        ax.plot(df[col], df[depth_col], color=color)
         ax.set_xlabel(col, fontsize=12, color='black')
         ax.tick_params(axis='x', colors='black')
         ax.invert_yaxis()
+
     axes[0].set_ylabel('Depth', fontsize=12, color='black')
     axes[0].tick_params(axis='y', colors='black')
     plt.tight_layout()
@@ -141,10 +144,14 @@ def plot_comprehensive(df, depth_col='DEPT', gamma_ray_col='GR', resistivity_col
     return fig
 
 # Function to plot violin plot for facies
-def plot_violin_facies(df, gamma_ray_col):
+def plot_count_facies(df, gamma_ray_col):
     fig, ax = plt.subplots(figsize=(10, 6))
-    sns.violinplot(x='Facies', y='NPHI', data=df, palette=['yellow', 'green'], ax=ax)
+    sns.countplot(x='Facies', hue='Facies', data=df, palette=['yellow', 'green'], ax=ax)
     ax.set_title('Lithology Analysis')
+    ax.set_ylabel('Count')
+    ax.set_xlabel('Facies')
+    plt.legend(title='Facies', labels=['Sand', 'Shale'])
+    plt.tight_layout()
     return fig
 
 # Function to generate and display the summary table

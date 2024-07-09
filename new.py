@@ -180,7 +180,7 @@ def main():
     st.write("""
     # `Well Log Analysis Dashboard`
     """)
-    st.write("### `About:`")
+    st.write("### `About`")
     st.write("""
               :clap: This `Streamlit web app offers a powerful and intuitive platform` for `analyzing well log` data:stuck_out_tongue_closed_eyes:. Designed for `geologists, 
               petroleum engineers, and data scientists`:blush:. This app simplifies the process of `visualizing, interpreting, and managing well log data`:wave:

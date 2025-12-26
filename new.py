@@ -3,11 +3,8 @@ import pandas as pd
 import lasio
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.colors import ListedColormap
 import seaborn as sns
-from tabulate import tabulate
 import warnings
-from scipy import stats
 import io
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image

@@ -1,1 +1,0 @@
-:clap: well log
